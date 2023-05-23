@@ -52,3 +52,18 @@ jobs:
         context: ./
         tags: ghcr.io/perplexedyawdie/clipcraft-u2net:latest
         push: true
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH into server and deploy container
+        run: |
+          ssh ${{ secrets.SSH_USERNAME }}@{{ secrets.SSH_HOST }} "docker pull ghcr.io/perplexedyawdie/clipcraft-u2net:latest && docker run -d -p 8003:5000 perplexedyawdie/clipcraft-u2net:latest"
