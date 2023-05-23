@@ -1,0 +1,35 @@
+name: Build and deploy U2NET salient object detection flask app to server
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubutnu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Authenticate with Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: set auto-install of extensions
+      run: az config set extension.use_dynamic_install=yes_without_prompt
+
+    - name: attach workspace
+      run: az ml folder attach -w "clipcraft-studio" -g "sunkwenga-rg"
+
+    - name: retrieve the model
+      run: az ml model download -t "." --model-id "U2Net:1"
+
+    - name: build flask-app container
+      uses: docker/build-push-action@v2
+      with:
+        context: ./
+        file: ./Dockerfile
+        push: false
+        tags: perplexedyawdie/clipcraft-u2net:latest
