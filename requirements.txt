@@ -1,0 +1,7 @@
+tensorflow-cpu; platform_machine != 'aarch64'
+tensorflow-aarch64; platform_machine == 'aarch64'
+onnx;
+onnxruntime;
+flask;
+opencv-python;
+numpy;
