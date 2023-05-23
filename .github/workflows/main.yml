@@ -89,4 +89,4 @@ jobs:
             git clone https://github.com/perplexedyawdie/clipcraft-u2net-flask.git && \
             cd clipcraft-u2net-flask && \
             docker build -t clipcraft-u2net-flask:latest . && \
-            docker run -d -p 8003:5000 --name clipcraft-u2net clipcraft-u2net-flask:latest
+            docker run -d -p 8003:5000 --name clipcraft-u2net clipcraft-u2net-flask:latest "
