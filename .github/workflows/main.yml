@@ -70,6 +70,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
+          
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GH_REGISTRY }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: SSH into server and deploy container
         env:
