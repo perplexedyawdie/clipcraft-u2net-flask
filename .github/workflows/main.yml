@@ -55,7 +55,7 @@ jobs:
 #         push: true
         
   deploy:
-    needs: [build]
+#     needs: [build]
     runs-on: ubuntu-latest
     
     steps:
