@@ -34,7 +34,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./
-        provenance: false
         platforms: linux/amd64,linux/arm64
         file: ./Dockerfile
         push: false
@@ -46,13 +45,21 @@ jobs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GH_REGISTRY }}
-
-    - name: build flask-app and push to registry
-      uses: docker/build-push-action@v2
-      with:
-        context: ./
-        tags: ghcr.io/perplexedyawdie/clipcraft-u2net:latest
-        push: true
+    
+    - name: Create and push manifest
+      run: |
+        docker manifest create ghcr.io/perplexedyawdie/clipcraft-u2net:latest \
+          ghcr.io/perplexedyawdie/clipcraft-u2net:latest-amd64 \
+          ghcr.io/perplexedyawdie/clipcraft-u2net:latest-arm64
+        docker manifest push ghcr.io/perplexedyawdie/clipcraft-u2net:latest
+#     - name: build flask-app and push to registry
+#       uses: docker/build-push-action@v2
+#       with:
+#         context: ./
+#         provenance: false
+#         tags: ghcr.io/perplexedyawdie/clipcraft-u2net:latest
+#         push: true
+        
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
