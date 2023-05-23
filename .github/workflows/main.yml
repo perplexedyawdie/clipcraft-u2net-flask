@@ -64,9 +64,21 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.2
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+      - name: Add SSH host key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
 
       - name: SSH into server and deploy container
         env:
           GITHUB_TOKEN: ${{ secrets.GH_REGISTRY }}
         run: |
-          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "docker pull ghcr.io/perplexedyawdie/clipcraft-u2net:latest && docker run -d -p 8003:5000 perplexedyawdie/clipcraft-u2net:latest"
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
+            if [ $(docker ps -a -q -f name=clipcraft-u2net) ]; then
+              docker stop clipcraft-u2net && \
+              docker rm clipcraft-u2net
+            fi
+              docker pull ghcr.io/perplexedyawdie/clipcraft-u2net:latest && \
+              docker run -d -p 8003:5000 --name clipcraft-u2net perplexedyawdie/clipcraft-u2net:latest"
