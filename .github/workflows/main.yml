@@ -53,6 +53,7 @@ jobs:
         tags: ghcr.io/perplexedyawdie/clipcraft-u2net:latest
         push: true
   deploy:
+    needs: [build]
     runs-on: ubuntu-latest
     
     steps:
@@ -68,4 +69,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_REGISTRY }}
         run: |
-          ssh ${{ secrets.SSH_USERNAME }}@{{ secrets.SSH_HOST }} "docker pull ghcr.io/perplexedyawdie/clipcraft-u2net:latest && docker run -d -p 8003:5000 perplexedyawdie/clipcraft-u2net:latest"
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "docker pull ghcr.io/perplexedyawdie/clipcraft-u2net:latest && docker run -d -p 8003:5000 perplexedyawdie/clipcraft-u2net:latest"
