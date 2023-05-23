@@ -54,7 +54,7 @@ jobs:
         tags: ghcr.io/perplexedyawdie/clipcraft-u2net:latest
         push: true
   deploy:
-#     needs: [build]
+    needs: [build]
     runs-on: ubuntu-latest
     
     steps:
