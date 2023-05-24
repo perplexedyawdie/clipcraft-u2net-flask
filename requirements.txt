@@ -5,3 +5,4 @@ onnxruntime;
 flask;
 opencv-python;
 numpy;
+Pillow;
