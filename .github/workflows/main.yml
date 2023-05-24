@@ -81,12 +81,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_REGISTRY }}
         run: |
           ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
-            if [ $(docker ps -a -q -f name=clipcraft-u2net) ]; then
-              docker stop clipcraft-u2net && \
-              docker rm clipcraft-u2net && \
-              rm -rf clipcraft-u2net-flask
-            fi
+              docker stop clipcraft-u2net > /dev/null 2>&1 && \
+              docker rm clipcraft-u2net > /dev/null 2>&1 && \
+            rm -rf clipcraft-u2net-flask && \
             git clone https://github.com/perplexedyawdie/clipcraft-u2net-flask.git && \
             cd clipcraft-u2net-flask && \
-            docker build -t clipcraft-u2net-flask:latest . && \
+            docker build --network host -t clipcraft-u2net-flask:latest . && \
             docker run -d -p 8003:5000 --name clipcraft-u2net clipcraft-u2net-flask:latest "
